@@ -1,0 +1,21 @@
+name: Remote SSH Command
+on: [push]
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: https://saahild.com/commissions
+    steps:
+      - name: Execute
+        uses: appleboy/ssh-action@v0.1.8
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          password: ${{ secrets.PASSWORD }}
+          port: ${{ secrets.PORT }}
+          script: |
+            cd /root
+            PUBLIC_URL=/commissions bash ./deploy_project.sh ${{ github.event.repository.name }} commissions "npm install" "npm run build"
